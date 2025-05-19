@@ -1,18 +1,11 @@
-resource "aws_security_group" "allow_ssh_and_https_anywhere" {
-  name        = "allow_ssh_and_https_anywhere"
+resource "aws_security_group" "allow_ssh_anydwhere" {
+  name        = "allow_ssh"
   vpc_id      = aws_vpc.myvpc.id
 
   ingress {
     description = "Allow SSH from anywhere"
     from_port   = 22
     to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  ingress {
-    description = "Allow https"
-    from_port   = 443
-    to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -25,7 +18,7 @@ resource "aws_security_group" "allow_ssh_and_https_anywhere" {
   }
 
   tags = {
-    Name = "allow_ssh_and_https_anywhere"
+    Name = "allow_ssh_anywhere"
   }
 }
 

@@ -1,4 +1,3 @@
-
 resource "aws_route_table" "public_route_table" {
   vpc_id = aws_vpc.myvpc.id
 
@@ -20,22 +19,22 @@ resource "aws_route_table" "private_route_table" {
 
 
 resource "aws_route_table_association" "public_route_association_1" {
-  subnet_id      = aws_subnet.public_subnet1.id
+  subnet_id      = aws_subnet.subnets["public_subnet1"].id
   route_table_id = aws_route_table.public_route_table.id
 }
 
 resource "aws_route_table_association" "public_route_association_2" {
-  subnet_id      = aws_subnet.public_subnet2.id
+  subnet_id      = aws_subnet.subnets["public_subnet2"].id
   route_table_id = aws_route_table.public_route_table.id
 }
 
 
 resource "aws_route_table_association" "private_route_association_1" {
-  subnet_id      = aws_subnet.private_subnet1.id
+  subnet_id      = aws_subnet.subnets["private_subnet1"].id
   route_table_id = aws_route_table.private_route_table.id
 }
 
 resource "aws_route_table_association" "private_route_association_2" {
-  subnet_id      = aws_subnet.private_subnet2.id
+  subnet_id      = aws_subnet.subnets["private_subnet2"].id
   route_table_id = aws_route_table.private_route_table.id
 }
