@@ -9,7 +9,7 @@ services:
       - mongo_data:/data/db
 
   app:
-    image: nayra000/simple_nodeapp:v1
+    image: nayra000/simple_nodeapp:latest
     container_name: node_app_container
     ports:
       - "3000:3000"
