@@ -1,5 +1,5 @@
-- name: Install OpenJDK 17 and create Jenkins directory (Ubuntu)
-  hosts: nodes
+- name: Install OpenJDK 17, Docker, Docker Compose, and create Jenkins directory (Ubuntu)
+  hosts: slave
   tasks:
 
     - name: Update APT package list
@@ -27,3 +27,81 @@
         msg: |
           Stdout: {{ java_output.stdout | default('') }}
           Stderr: {{ java_output.stderr | default('') }}
+
+    - name: Install required packages for Docker
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+        state: present
+
+    - name: Ensure gnupg is installed
+      apt:
+        name: gnupg
+        state: present
+
+    - name: Remove existing Docker GPG key file
+      file:
+        path: /usr/share/keyrings/docker-archive-keyring.gpg
+        state: absent
+
+    - name: Download Docker GPG key
+      shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+    - name: Add Docker APT repository
+      apt_repository:
+        repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+        state: present
+
+    - name: Update APT package list after adding Docker repo
+      apt:
+        update_cache: yes
+
+    - name: Install Docker Engine
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        state: present
+
+    - name: Ensure Docker service is started and enabled
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Add 'ubuntu' user to 'docker' group
+      user:
+        name: ubuntu
+        groups: docker
+        append: yes
+
+    - name: Download Docker Compose
+      shell: curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose
+
+    - name: Apply executable permissions
+      file:
+        path: /usr/local/bin/docker-compose
+        mode: '0755'
+        state: file
+
+    - name: Verify Docker Compose installation
+      command: docker-compose --version
+      register: compose_output
+      ignore_errors: true
+
+    - name: Display Docker Compose version
+      debug:
+        msg: |
+          Stdout: {{ compose_output.stdout | default('') }}
+          Stderr: {{ compose_output.stderr | default('') }}
+
+    - name: Copy docker-compose.yaml to the remote node
+      copy:
+        src:  /home/nayra/project/PipelineCraft/nodejs_project/docker-compose.yaml
+        dest: /home/ubuntu/jenkins/
+        mode: '0644'
