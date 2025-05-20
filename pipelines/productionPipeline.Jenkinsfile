@@ -8,6 +8,21 @@ pipeline {
     }
 
     stages {
+        stage('Remove Old Docker Image') {
+            steps {
+                script {
+                    sh """
+                        if docker images | grep -q '${IMAGE_NAME}'; then
+                            echo "Removing old image ${IMAGE_NAME}:${IMAGE_TAG}"
+                            docker rmi -f ${IMAGE_NAME}:${IMAGE_TAG}
+                        else
+                            echo "No existing image found for ${IMAGE_NAME}"
+                        fi
+                    """
+                }
+            }
+        }
+
         stage('Pull Docker Image') {
             steps {
                 script {
@@ -43,10 +58,10 @@ pipeline {
 
     post {
         success {
-            slackSend channel: 'pipeline_craft', message: "✅ Deployed Succeeded! Job: ${env.JOB_NAME}, Build: ${env.BUILD_NUMBER}, Time: ${new Date()}"
+            slackSend channel: 'pipeline_craft', message: "✅ Deploy Succeeded! Job: ${env.JOB_NAME}, Build: ${env.BUILD_NUMBER}, Time: ${new Date()}"
         }
         failure {
-            slackSend channel: 'pipeline_craft', message: "❌ Deployed Apply Failed! Job: ${env.JOB_NAME}, Build: ${env.BUILD_NUMBER}, Time: ${new Date()}"
+            slackSend channel: 'pipeline_craft', message: "❌ Deploy Failed! Job: ${env.JOB_NAME}, Build: ${env.BUILD_NUMBER}, Time: ${new Date()}"
         }
     }
 }
