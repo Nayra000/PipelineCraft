@@ -8,9 +8,13 @@ output "subnet_ids" {
 }
 
 output "ssh_SG_id" {
-  value       = aws_security_group.allow_ssh_anydwhere.id
+  value       = aws_security_group.allow_ssh_anywhere.id
 }
 
 output "ssh_3000_SG_id" {
-  value       = aws_security_group.allow_ssh_and_3000_vpc.id
+  value       = aws_security_group.allow-ssh-and-3000.id
+}
+
+output "lb_sg_id" {
+  value       = aws_security_group.lb_sg.id
 }
