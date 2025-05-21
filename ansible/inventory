@@ -1,8 +1,8 @@
 [master]
-54.224.244.147
+52.23.255.126
 
 [slave]
-10.0.2.219
+10.0.2.140
 
 [master:vars]
 ansible_ssh_private_key_file=/home/nayra/project/id_rsa
@@ -10,4 +10,4 @@ ansible_ssh_private_key_file=/home/nayra/project/id_rsa
 [slave:vars]
 ansible_user=ubuntu
 ansible_ssh_private_key_file=/home/nayra/project/id_rsa
-ansible_ssh_common_args='-o ProxyCommand="ssh -W %h:%p -q -i /home/nayra/project/id_rsa ubuntu@54.224.244.147"'
+ansible_ssh_common_args='-o ProxyCommand="ssh -W %h:%p -q -i /home/nayra/project/id_rsa ubuntu@52.23.255.126"'

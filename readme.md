@@ -15,6 +15,9 @@ The infrastructure features:
 - Application Load Balancer (ALB) for public access
 - Bastion host for secure access to private resources
 
+
+![AWS Architecture](./aws-arch.jpg)
+
 ---
 
 ## 🌟 Key Features
